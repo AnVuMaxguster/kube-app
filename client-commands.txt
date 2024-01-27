@@ -30,3 +30,6 @@ kops delete cluster --name kubevpro --state=s3://connor-kop-states --yes --admin
 
 # Label the nodes by zone ( for nodeselect: field in db-deploy.yaml - configuration detail: only run vprodb-pod in the same zone as the EBS volume )
 kubectl label nodes <node-name> zone=us-east-1b
+
+# Create/apply resource minifest files ( all files inside the same directory )
+kubectl create/apply -f .

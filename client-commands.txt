@@ -38,6 +38,7 @@ kubectl config view
 kops validate cluster --state=s3://connor-kops-state
 
 # Label the nodes by zone ( for nodeselect: field in db-deploy.yaml - configuration detail: only run vprodb-pod in the same zone as the EBS volume )
+kubectl label nodes <node-name> zone=us-east-1a
 kubectl label nodes <node-name> zone=us-east-1b
 
 # Create/apply resource minifest files ( all files inside the same directory )

@@ -26,7 +26,7 @@ spec:
         # Wait for dependency services to be created first
         - name: init-db
           image: busybox:latest
-          command: ['sh', '-c', "until nslookup vprodb; do echo waiting for service vprodb; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup vprodb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for service vprodb; sleep 2; done"]
         - name: init-memcache
           image: busybox:latest
-          command: ['sh', '-c', "until nslookup vprocache01; do echo waiting for service vpromc; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup vprocache01.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for service vpromc; sleep 2; done"]

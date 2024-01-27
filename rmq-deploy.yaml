@@ -17,16 +17,16 @@ spec:
         app: vpromq-pod
     spec:
       containers:
-      - name: vpromq-pod
-        image: rabbitmq
-        ports:
-          - name: vpromq-port
-            containerPort: 15672
-        env:
-          - name: RABBITMQ_DEFAULT_USER
-            value: "guest"
-          - name: RABBITMQ_DEFAULT_PASS
-            valueFrom:
-              secretKeyRef:
-                name: cred-secret
-                key: rmq-pass
+        - name: vpromq-pod
+          image: rabbitmq
+          ports:
+            - name: vpromq-port
+              containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "guest"
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: cred-secret
+                  key: rmq-pass

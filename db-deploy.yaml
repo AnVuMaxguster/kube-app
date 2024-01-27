@@ -40,12 +40,8 @@ spec:
             fsType: ext4
       initContainers:
         - name: mysqlcleanup
-          image: busybox:lastest
+          image: busybox:latest
           command: ["rm", "-rf", "/var/lib/mysql/lost+found"]
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: vprodb-data
-
-        
-
-          

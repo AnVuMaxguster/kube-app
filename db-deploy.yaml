@@ -26,7 +26,7 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: cred-secret 
+                  name: vpro-cred-secret 
                   key: db-pass
           volumeMounts:
             - mountPath: /var/lib/mysql

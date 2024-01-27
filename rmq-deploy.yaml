@@ -28,5 +28,5 @@ spec:
             - name: RABBITMQ_DEFAULT_PASS
               valueFrom:
                 secretKeyRef:
-                  name: cred-secret
+                  name: vpro-cred-secret
                   key: rmq-pass

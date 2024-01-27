@@ -1,9 +1,10 @@
 # Install awscli, kubectl, kops
 # Configure awscli with access credentials 
+** Note: S3 buckets, EC2 instances, EBS volumes used for the cluster have to be in the same region
 
 # Create S3 bucket ( for storing cluster state  )
 aws s3api create-bucket \
-  --bucket connor-kop-states \
+  --bucket connor-kops-state \
   --region us-east-1
 
 # Create EBS volume ( for mounting it to the database )
@@ -13,23 +14,36 @@ aws ec2 create-volume \
   --size 3 \
   --volume-type gp2
 
+# Check the hosted zone ( ROUTE 53 )
+nslookup --type=ns <domain-name>
+
 # Bring up cluster: create - update
-
-# Bring down cluster ( & remove ): delete
-
-kops create cluster --name=kubevpro \ 
---state=s3://connor-kop-states --zones=us-east-1a,us-east-1b \ 
---node-count=2 --node-size=t3.small --master-size=t3.medium --dns-zone=kubevpro.maxguster.id.vn \ 
+# Bring down cluster ( & cleanup ): delete
+kops create cluster --name=vprokube.maxguster.id.vn \
+--state=s3://connor-kops-state --zones=us-east-1a,us-east-1b \
+--node-count=2 --node-size=t3.small --master-size=t3.medium --dns-zone=vprokube.maxguster.id.vn \
 --node-volume-size=8 --master-volume-size=8
 
-kops update cluster --name kubevpro --state=s3://connor-kop-states --yes --admin
+kops update cluster --name vprokube.maxguster.id.vn --state=s3://connor-kops-state --yes --admin
 
-kops delete cluster --name kubevpro --state=s3://connor-kop-states --yes --admin
+kops delete cluster --name vprokube.maxguster.id.vn --state=s3://connor-kops-state --yes --admin
 
-# Note: S3 buckets, EC2 instances, EBS volumes used for the cluster have to be in the same region
+** Cluster Name must be a fully-qualified DNS name 
+** Without specifying --ssh-public-key=, kops will create it
+
+# Check kubectl config
+kubectl config view
+
+# Validate cluster ( make sure to see "Your cluster <cluster-name> is ready ")
+kops validate cluster --state=s3://connor-kops-state
 
 # Label the nodes by zone ( for nodeselect: field in db-deploy.yaml - configuration detail: only run vprodb-pod in the same zone as the EBS volume )
 kubectl label nodes <node-name> zone=us-east-1b
 
 # Create/apply resource minifest files ( all files inside the same directory )
 kubectl create/apply -f .
+
+# Some checking
+kubectl get <resource-type>
+kubectl describe <resource-type> <resource-name>
+kubectl logs <resource-name>

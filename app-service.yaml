@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vproapp-svc
+spec:
+  selector:
+    app: vproapp-pod
+  ports:
+    - port: 80
+      targetPort: vproapp-port
+      # Default protocol: TCP
+  type: LoadBalancer

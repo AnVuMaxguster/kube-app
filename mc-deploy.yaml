@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpromc-dp
+  labels:
+    app: vpromc-dp
+spec:
+  # Apply existing pods
+  selector:
+    matchLabels:
+      app: vpromc-pod
+  #
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vpromc-pod
+    spec:
+      containers:
+        - name: vpromc-pod
+          image: memcached
+          ports:
+            - name: vpromc-port
+              containerPort: 11211

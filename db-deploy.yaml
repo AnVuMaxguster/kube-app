@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vprodb-dp
+  labels:
+    app: vprodb-dp
+spec:
+  # Apply existing pods
+  selector:
+    matchLabels:
+      app: vprodb-pod
+  #
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vprodb-pod
+    spec:
+      containers:
+        - name: vprodb-pod
+          image: maxguster/vprofiledb
+          ports:
+            - name: vprodb-port
+              containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cred-secret 
+                  key: db-pass
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: vprodb-data
+      nodeSelector:
+        zone: us-east-1b
+      volumes:
+        - name: vprodb-data
+          awsElasticBlockStore:
+            volumeID: vol-0eeba9694709f54dc
+            fsType: ext4
+      initContainers:
+        - name: mysqlcleanup
+          image: busybox:lastest
+          command: ["rm", "-rf", "/var/lib/mysql/lost+found"]
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: vprodb-data
+
+        
+
+          

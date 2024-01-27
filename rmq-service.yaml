@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+# Match the hostname in application.properties
+  name: vpromq01
+spec:
+  # Default type: clusterIP
+  selector:
+    app: vpromq-pod
+  ports:
+    - port: 15672
+      targetPort: vpromq-port
+      # Default protocol: TCP
